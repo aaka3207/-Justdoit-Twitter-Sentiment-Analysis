@@ -5,6 +5,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer,SnowballStemmer
 import string
+from string import punctuation
 class CleanText(BaseEstimator, TransformerMixin):
 
     def preprocess_word(self,word):
@@ -14,7 +15,30 @@ class CleanText(BaseEstimator, TransformerMixin):
         # Remove - & '
         word = re.sub(r'(-|\')', '', word)
         return word
-
+    def processTweet(self,tweet):
+        # Remove HTML special entities (e.g. &amp;)
+        tweet = re.sub(r'\&\w*;', '', tweet)
+        #Convert @username to AT_USER
+        tweet = re.sub('@[^\s]+','',tweet)
+        # Remove tickers
+        tweet = re.sub(r'\$\w*', '', tweet)
+        # To lowercase
+        tweet = tweet.lower()
+        # Remove hyperlinks
+        tweet = re.sub(r'https?:\/\/.*\/\w*', '', tweet)
+        # Remove hashtags
+        tweet = re.sub(r'#\w*', '', tweet)
+        # Remove Punctuation and split 's, 't, 've with a space for filter
+        tweet = re.sub(r'[' + punctuation.replace('@', '') + ']+', ' ', tweet)
+        # Remove words with 2 or fewer letters
+        tweet = re.sub(r'\b\w{1,2}\b', '', tweet)
+        # Remove whitespace (including new line characters)
+        tweet = re.sub(r'\s\s+', ' ', tweet)
+        # Remove single space remaining at the front of the tweet.
+        tweet = tweet.lstrip(' ') 
+        # Remove characters beyond Basic Multilingual Plane (BMP) of Unicode:
+        tweet = ''.join(c for c in tweet if c <= '\uFFFF') 
+        return tweet
 
     def is_valid_word(self,word):
         # Check if word begins with an alphabet
@@ -45,8 +69,9 @@ class CleanText(BaseEstimator, TransformerMixin):
         stopwords_list = stopwords.words('english')
         # Some words which might indicate a certain sentiment are kept via a whitelist
         whitelist = ["n't", "not", "no"]
+        blacklist = ['https']
         words = input_text.split() 
-        clean_words = [word for word in words if (word not in stopwords_list or word in whitelist) and len(word) > 1] 
+        clean_words = [word for word in words if (word not in stopwords_list or word in whitelist or word not in blacklist) and len(word) > 1] 
         return " ".join(clean_words) 
 
     def handle_emojis(self,tweet):
@@ -72,7 +97,7 @@ class CleanText(BaseEstimator, TransformerMixin):
         # Replaces URLs with the word URL
         tweet = re.sub(r'((www\.[\S]+)|(https?://[\S]+))', '', tweet)
         # Replace @handle with the word USER_MENTION
-        tweet = re.sub(r'@[\S]+', '', tweet)
+        tweet = re.sub(r'@[\S]+', ' USER_MENTION ', tweet)
         # Replaces #hashtag with hashtag
         tweet = re.sub(r'#(\S+)', r' \1 ', tweet)
         # Remove RT (retweet)
@@ -102,5 +127,6 @@ class CleanText(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None, **fit_params):
         return self
     def transform(self, X, **transform_params):
-        clean_X = X.apply(self.remove_mentions).apply(self.remove_urls).apply(self.emoji_oneword).apply(self.remove_punctuation).apply(self.remove_digits).apply(self.to_lower).apply(self.remove_stopwords).apply(self.stemming)
+        clean_X = X.apply(self.processTweet)
+        #clean_X = X.apply(self.remove_mentions).apply(self.remove_urls).apply(self.emoji_oneword).apply(self.remove_punctuation).apply(self.remove_digits).apply(self.to_lower).apply(self.remove_stopwords).apply(self.stemming)
         return clean_X

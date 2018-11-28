@@ -43,7 +43,7 @@ tweet_data = tweet_data[['tweet_created_at','tweet_full_text']]
 tweet_data = tweet_data.dropna()
 tweet_data = tweet_data.reindex(np.random.permutation(tweet_data.index))
 #training_data['sentiment'] = training_data['sentiment'].map({'negative': -1, 'positive': 1,'neutral':.5})
-ct = clean.CleanText()
+ct = clean_2.CleanText()
 sr_clean = ct.fit_transform(tweet_data.tweet_full_text)
 print(sr_clean)
 tweet_data['text_clean'] = sr_clean
@@ -60,7 +60,7 @@ def load_and_preprocess():
     tweet_data = tweet_data.dropna()
     tweet_data = tweet_data.reindex(np.random.permutation(tweet_data.index))
     #training_data['sentiment'] = training_data['sentiment'].map({'negative': -1, 'positive': 1,'neutral':.5})
-    ct = clean.CleanText()
+    ct = clean_2.CleanText()
     sr_clean = ct.fit_transform(tweet_data.tweet_full_text)
     print(sr_clean)
     tweet_data['text_clean'] = sr_clean

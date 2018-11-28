@@ -62,6 +62,8 @@ def display_accuracy_difference(y_test, y_pred_class):
 
 def train_test_and_evaluate(pipeline, X_train, y_train, X_test, y_test):
     pipeline.fit(X_train, y_train)
+    print(pipeline.best_params_)
+    print(pipeline.best_estimator_)
     y_pred_class = pipeline.predict(X_test)
     unique_label = np.unique(y_test)
     matrix = ConfusionMatrix(y_test, y_pred_class)

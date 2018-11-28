@@ -46,7 +46,7 @@ training_data = training_data.dropna()
 training_data = training_data.reindex(np.random.permutation(training_data.index))
 text_train = training_data[training_data.text != 'Not Available']
 training_data = text_train
-ct_train = clean.CleanText()
+ct_train = clean_2.CleanText()
 sr_clean_train = ct_train.fit_transform(training_data.text)
 training_data.text = sr_clean_train
 training_data.to_csv(Path(__file__).absolute().parent.joinpath('../dataset/train-preprocessed.csv'))
@@ -57,7 +57,7 @@ testing_data = testing_data.dropna()
 testing_data = testing_data.reindex(np.random.permutation(testing_data.index))
 text_test = testing_data[testing_data.text != 'Not Available']
 testing_data = text_test
-ct_test = clean.CleanText()
+ct_test = clean_2.CleanText()
 sr_clean_test = ct_test.fit_transform(testing_data.text)
 testing_data.text = sr_clean_test
 testing_data.to_csv(Path(__file__).absolute().parent.joinpath('../dataset/test-preprocessed.csv'))

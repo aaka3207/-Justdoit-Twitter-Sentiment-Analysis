@@ -37,13 +37,13 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 from pandas_confusion import ConfusionMatrix
 
 
-model = load(Path(__file__).absolute().parent.joinpath("../output/model.joblib"))
+model = load(Path(__file__).absolute().parent.joinpath("../dataset/model.joblib"))
 
 testTextPath =  Path(__file__).absolute().parent.joinpath('../dataset/nike-preprocessed.csv')
 testing_data = pd.read_csv(testTextPath)
 testing_data = testing_data[['text_clean','tweet_created_at','tweet_full_text']]
 X_test = testing_data.text_clean
-
+print(X_test.head(10))
 
 y_pred_class = model.predict(X_test)
 testing_data['sentiment'] = y_pred_class
