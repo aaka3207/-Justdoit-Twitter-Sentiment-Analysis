@@ -72,4 +72,4 @@ sentiment_pipeline, confusion_matrix, y_true = train_test_and_evaluate(
 results = pd.DataFrame({'predicted': y_true, 'actual': y_test})
 results.to_csv(Path(__file__).absolute().parent.joinpath(
     '../output/training_results.csv'))
-dump(sentiment_pipeline., Path(__file__).absolute().parent.joinpath('../dataset/model.joblib'))
+dump(sentiment_pipeline, Path(__file__).absolute().parent.joinpath('../dataset/model.joblib'))
