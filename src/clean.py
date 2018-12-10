@@ -1,11 +1,10 @@
 import re
 from nltk.stem.porter import PorterStemmer
 from sklearn.base import BaseEstimator, TransformerMixin
-from nltk.corpus import stopwords
 
 class CleanText(BaseEstimator, TransformerMixin):
 
-    def preprocess_word(self,word):
+    def preprocess_word(self, word):
         # Remove punctuation
         word = word.strip('\'"?!,.():;')
         # Convert more than 2 letter repetitions to 2 letter
@@ -15,13 +14,11 @@ class CleanText(BaseEstimator, TransformerMixin):
         word = re.sub(r'(-|\')', '', word)
         return word
 
-
-    def is_valid_word(self,word):
+    def is_valid_word(self, word):
         # Check if word begins with an alphabet
         return (re.search(r'^[a-zA-Z][a-z0-9A-Z\._]*$', word) is not None)
 
-
-    def handle_emojis(self,tweet):
+    def handle_emojis(self, tweet):
         # Smile -- :), : ), :-), (:, ( :, (-:, :')
         tweet = re.sub(r'(:\s?\)|:-\)|\(\s?:|\(-:|:\'\))', ' EMO_POS ', tweet)
         # Laugh -- :D, : D, :-D, xD, x-D, XD, X-D
@@ -36,8 +33,7 @@ class CleanText(BaseEstimator, TransformerMixin):
         tweet = re.sub(r'(:,\(|:\'\(|:"\()', ' EMO_NEG ', tweet)
         return tweet
 
-
-    def preprocess_tweet(self,tweet):
+    def preprocess_tweet(self, tweet):
         processed_tweet = []
         # Convert to lower case
         tweet = tweet.lower()
@@ -60,13 +56,16 @@ class CleanText(BaseEstimator, TransformerMixin):
         words = tweet.split()
         porter_stemmer = PorterStemmer()
         for word in words:
+            #convert to proper word
             word = self.preprocess_word(word)
             if self.is_valid_word(word):
-                    word = str(porter_stemmer.stem(word))
-                    processed_tweet.append(word)
+                word = str(porter_stemmer.stem(word))
+                processed_tweet.append(word)
         return ' '.join(processed_tweet)
+
     def fit(self, X, y=None, **fit_params):
         return self
+
     def transform(self, X, **transform_params):
         clean_X = X.apply(self.preprocess_tweet)
-        return clean_X    
+        return clean_X

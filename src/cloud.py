@@ -1,4 +1,4 @@
-from wordcloud import WordCloud
+from wordcloud import WordCloud, STOPWORDS
 import pandas as  pd
 from pathlib import Path
 import matplotlib.pyplot as plt
@@ -9,13 +9,16 @@ nike_tweets = nike_tweets[['tweet_full_text']]
 exclude = stopwords.words('english').append('https')
 tweet_string = []
 cleaner = CleanText()
+words_to_exclude = {'https'}
+
 for t in nike_tweets.tweet_full_text:
-    t = cleaner.remove_stopwords(t)
+    
     tweet_string.append(t)
 tweet_string = pd.Series(tweet_string).str.cat(sep=' ')
 whitelist = ["n't", "not", "no"]
+print(tweet_string)
 print(stopwords.words('english'))
-wc = WordCloud(width=1600, height=800,max_font_size=200,ranks_only="frequency",stopwords=exclude).generate(tweet_string)
+wc = WordCloud(width=1600, height=800,max_font_size=200,ranks_only="frequency",stopwords=STOPWORDS.union(words_to_exclude),collocations=False).generate(tweet_string)
 plt.figure(figsize=(12,10))
 plt.imshow(wc, interpolation="bilinear")
 plt.axis("off")

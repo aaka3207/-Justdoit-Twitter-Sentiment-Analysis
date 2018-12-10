@@ -19,17 +19,11 @@ from sklearn.metrics import classification_report
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression,LogisticRegressionCV
 from sklearn.externals import joblib
-from sklearn.svm import SVC
-import gensim
-import nltk
-import warnings
-warnings.filterwarnings('ignore')
 np.random.seed(37)
 from pathlib import Path
 import os
 from joblib import dump, load
 
-from sklearn_helpers import train_test_and_evaluate
 
 import clean
 from textblob import TextBlob

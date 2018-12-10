@@ -1,0 +1,9 @@
+scikit-learn
+pandas
+pandas_confusion
+nltk
+emoji
+wordcloud
+matplotlib
+XlsxWriter
+joblib
