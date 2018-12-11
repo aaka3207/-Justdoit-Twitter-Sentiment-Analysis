@@ -48,12 +48,10 @@ print('total neutral tweets:', len(
     training_data[training_data.sentiment == 'neutral']))
 
 
-# Your milage may vary on these arguments
 #we will be using nltk's TweetTokenizer to seperate every word in each tweet into an individual token
 tokenizer = nltk.casual.TweetTokenizer()
 #Scikit Learn's Countvectorizer, used to tranform our training and testing data into a bag of words model
 cv_vect = CountVectorizer(tokenizer=tokenizer.tokenize, analyzer="word",ngram_range=(1,2),max_df=.75)
-#classifierCv = LogisticRegressionCV(multi_class='multinomial',solver='lbfgs',cv=4,penalty='l2')
 
 #if we want to use GridSearchCV to try out different parameters for the pipeline
 tuned_parameters = {}
@@ -67,12 +65,17 @@ sentiment_pipeline = Pipeline([
 
 #warning: this model is CPU intensive, may take a while. 
 clf = GridSearchCV(sentiment_pipeline, tuned_parameters, cv=4, refit=True)
+print('-----------Training Model-----------')
 sentiment_pipeline, confusion_matrix, y_true = train_test_and_evaluate(
     clf, X_train, y_train, X_test, y_test)
 results = pd.DataFrame({'predicted': y_true, 'actual': y_test})
 results_path = '~/../output/training-results.xlsx'
 writer = pd.ExcelWriter(results_path)
 results.to_excel(writer,'Results')
+print('--------Writing raw testing results to final results --------------')
 confusion_matrix.to_excel(writer,'Confusion Matrix')
+print('----------Writing confusion matrix to final results ----------------')
 writer.save()
+print('----------Final report saved----------------')
 dump(sentiment_pipeline, Path(__file__).absolute().parent.joinpath('../dataset/model.joblib'))
+print('------------Model saved to disk-------------')
