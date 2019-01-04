@@ -14,7 +14,8 @@ Information:
 
 	This is the final system for analyzing the 5000 #justdoit tweets dataset provided on Kaggle. 
 	
-	Credits: Ameer Akashe, Shivam Bhattacharya, Mark Maatouk
+	Credits: Ameer Akashe
+	
 
 
 	The original training and testing dataset can be found at http://alt.qcri.org/semeval2017/task4/
